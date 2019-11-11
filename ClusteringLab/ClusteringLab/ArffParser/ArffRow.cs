@@ -18,7 +18,9 @@ namespace ClusteringLab.ArffParser {
         public double ColumnValue(int column) {
             return _values[column];
         }
-
+        public bool ColumnIsUnknown(int column) {
+            return _values[column] == double.MaxValue;
+        }
         public string NominalColumnValue(int column, double value) {
             string toReturn = null;
             if (!_relation.Columns[column].IsReal) {
