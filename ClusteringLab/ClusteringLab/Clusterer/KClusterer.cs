@@ -30,7 +30,13 @@ namespace ClusteringLab.Clusterer {
                 clusters.Add(new Cluster(_relation.Rows[row].Clone()));
             }
 
-            // Assigning points to initial clusters.
+            // Assigns rows to their closest clusters for initial placement.
+            AssignRows(clusters);
+
+            return clusters;
+        }
+
+        private void AssignRows(List<Cluster> clusters) {
             foreach (ArffRow row in _relation.Rows) {
                 double closestDistance = double.MaxValue;
                 Cluster closestCluster = null;
@@ -43,10 +49,7 @@ namespace ClusteringLab.Clusterer {
                 }
                 closestCluster.AddPoint(row);
             }
-
-            return clusters;
         }
-
 
     }
 }
