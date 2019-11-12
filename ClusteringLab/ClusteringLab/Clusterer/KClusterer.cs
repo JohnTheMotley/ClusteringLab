@@ -76,5 +76,12 @@ namespace ClusteringLab.Clusterer {
             return error;
         }
 
+        public StringBuilder ClusterData() {
+            var builder = new StringBuilder();
+            foreach (Cluster c in _clusters) {
+                builder.Append(c.Data() + "\n");
+            }
+            return builder;
+        }
     }
 }

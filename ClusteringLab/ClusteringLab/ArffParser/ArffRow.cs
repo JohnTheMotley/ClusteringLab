@@ -113,5 +113,29 @@ namespace ClusteringLab.ArffParser {
             }
             return average;
         }
+
+        public StringBuilder Data() {
+            var builder = new StringBuilder();
+            builder.Append("{");
+            for (int col = 0; col < _values.Count - 1; col++) {
+                builder.Append(" " + ColumnToString(col) + ",");
+            }
+            builder.Append(" " + ColumnToString(_values.Count - 1) + "}");
+            return builder;
+        }
+
+        private string ColumnToString(int col) {
+            string toRet = "";
+            if (ColumnIsUnkown(col)) {
+                toRet = "?";
+            }
+            else if (_relation.Columns[col].IsReal) {
+                toRet = _values[col].ToString();
+            }
+            else {
+                toRet = _relation.Columns[col].NominalValues[_values[col]];
+            }
+            return toRet;
+        }
     }
 }

@@ -40,13 +40,32 @@ namespace ClusteringLab {
             var clusterer = new Clusterer.KClusterer(k, relation, randomInitials);
             double squaredError = clusterer.TotalSquaredError();
 
+            PrintMessage(clusterer, 1);
+
             clusterer.ReCluster();
             double nextSquaredError = clusterer.TotalSquaredError();
+            int iteration = 2;
+            PrintMessage(clusterer, iteration);
             while (nextSquaredError != squaredError) {
+                iteration++;
                 clusterer.ReCluster();
                 squaredError = nextSquaredError;
                 nextSquaredError = clusterer.TotalSquaredError();
+                PrintMessage(clusterer, iteration);
             }
+        }
+
+        private static void PrintMessage(Clusterer.KClusterer clusterer, int iteration) {
+            var builder = new System.Text.StringBuilder();
+
+            builder.Append(SEPARATOR + "\n" + SEPARATOR + "\n");
+            builder.Append(string.Format(ITERATION_MESSAGE, iteration) + "\n");
+            builder.Append(SEPARATOR + "\n");
+            builder.Append(clusterer.ClusterData() + "\n");
+            builder.Append(string.Format(SSE_MESSAGE, clusterer.TotalSquaredError()) + "\n");
+            builder.Append(SEPARATOR + "\n" + SEPARATOR + "\n");
+
+            Console.WriteLine(builder.ToString());
         }
 
         private static string ERROR_MESSAGE = "There was an error parsing the command line inputs. Please include the following arguments: {0} <Arff File Location> {1} <K for Clustering> {2} <Use random initial cluster locations>\nOptional Parameters: {3} <Column indices to ignore>\nInternal Error: {4}";
@@ -54,5 +73,9 @@ namespace ClusteringLab {
         private static string K_ARGUMENT = "--k";
         private static string RANDOM_INITIAL_CLUSTERS_ARGUMENT = "--randomInitials";
         private static string IGNORED_COLUMNS_ARGUMENT = "--ignoredColumns";
+
+        private static string SEPARATOR = "----------";
+        private static string ITERATION_MESSAGE = "Iteration: {0}";
+        private static string SSE_MESSAGE = "SSE: {0}";
     }
 }

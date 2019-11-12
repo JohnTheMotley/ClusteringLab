@@ -46,5 +46,22 @@ namespace ClusteringLab.Clusterer {
 
             return sumSquaredError;
         }
+
+        public StringBuilder Data() {
+            var builder = new StringBuilder();
+            builder.Append(string.Format(CENTROID_MESSAGE, Position.Data()) + "\n");
+
+            var dataBuilder = new StringBuilder();
+            foreach (var row in _points) {
+                dataBuilder.Append("\t" + row.Data() + "\n");
+            }
+            builder.Append("Data Points: {\n");
+            builder.Append(dataBuilder);
+            builder.Append("}");
+
+            return builder;
+        }
+
+        private static string CENTROID_MESSAGE = "Centroid: {0}";
     }
 }
