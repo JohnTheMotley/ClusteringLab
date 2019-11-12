@@ -14,15 +14,19 @@ namespace ClusteringLab.ArffParser {
             _rows = new List<ArffRow>();
         }
 
-        internal List<ArffColumn> Columns {
+        public List<ArffColumn> Columns {
             get { return _columns; }
         }
 
-        internal void AddColumn(ArffColumn col) {
+        public List<ArffRow> Rows {
+            get { return _rows; }
+        }
+
+        public void AddColumn(ArffColumn col) {
             _columns.Add(col);
         }
         
-        internal void AddRow(ArffRow row) {
+        public void AddRow(ArffRow row) {
             _rows.Add(row);
         }
     }

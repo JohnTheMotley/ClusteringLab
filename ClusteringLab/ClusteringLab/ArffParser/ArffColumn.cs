@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace ClusteringLab.ArffParser {
-    internal class ArffColumn {
+    public class ArffColumn {
         private string _name;
         private bool _isReal;
         private Map<double, string> _nominalValues;

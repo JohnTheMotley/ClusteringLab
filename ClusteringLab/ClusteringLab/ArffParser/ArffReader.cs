@@ -76,7 +76,7 @@ namespace ClusteringLab.ArffParser {
                 }
             }
 
-            var toAdd = new ArffRow(relation, rowValues);
+            var toAdd = new ArffRow(relation, rowValues.ToList());
             relation.AddRow(toAdd);
         }
     }

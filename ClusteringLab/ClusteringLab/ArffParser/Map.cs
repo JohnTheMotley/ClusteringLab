@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Text;
 
@@ -12,6 +13,13 @@ namespace ClusteringLab.ArffParser {
             _reverse = new Dictionary<T2, T1>();
         }
 
+        public bool ContainsKey(T1 key) {
+            return _forward.ContainsKey(key);
+        }
+        public bool ContainsKey(T2 key) {
+            return _reverse.ContainsKey(key);
+        }
+
         public void Add(T1 first, T2 second) {
             _forward.Add(first, second);
             _reverse.Add(second, first);
@@ -19,9 +27,11 @@ namespace ClusteringLab.ArffParser {
 
         public T2 this[T1 key] {
             get { return _forward[key]; }
+            set { _forward[key] = value; }
         }
         public T1 this[T2 key] {
             get { return _reverse[key]; }
+            set { _reverse[key] = value; }
         }
     }
 }
