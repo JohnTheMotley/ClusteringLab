@@ -48,8 +48,12 @@ namespace ClusteringLab.ArffParser {
         }
 
         private static void AddRelationAttribute(ArffRelation relation, string attribute) {
-            //string[] attributeValues = attribute.Split(new char[] { ' ', '\t' });
-            string[] attributeValues = System.Text.RegularExpressions.Regex.Split(attribute, @"[\s\t]+");
+            string[] attributeValues = new string[3];
+            attributeValues[0] = attribute.Substring(0, attribute.IndexOfAny(new char[] { ' ', '\t' }));
+            attribute = attribute.Remove(0, attributeValues[0].Length).Trim();
+            attributeValues[1] = attribute.Substring(0, attribute.IndexOfAny(new char[] { ' ', '\t' }));
+            attribute = attribute.Remove(0, attributeValues[1].Length).Trim();
+            attributeValues[2] = attribute;
 
             string name = attributeValues[1];
             bool isReal = true;
@@ -60,7 +64,7 @@ namespace ClusteringLab.ArffParser {
                 nominals = new Map<double, string>();
                 string[] nominalValues = attributeValues[2].Trim(new char[] { '{', '}' }).Split(',');
                 for (int i = 0; i < nominalValues.Length; i++) {
-                    nominals.Add(i, nominalValues[i]);
+                    nominals.Add(i, nominalValues[i].Trim());
                 }
             }            
 
