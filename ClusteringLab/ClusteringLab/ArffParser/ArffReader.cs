@@ -6,11 +6,12 @@ using System.Linq;
 
 namespace ClusteringLab.ArffParser {
     public static class ArffReader {
-        public static ArffRelation LoadArff(FileStream fs) {
+        public static ArffRelation LoadArff(FileStream fs, List<int> columnsToIgnore) {
             var reader = new StreamReader(fs);
             ArffRelation toReturn = null;
             bool notInDataSection = true;
-            
+
+            int currentColumn = 0;
             while (!reader.EndOfStream && notInDataSection) {
                 string line = reader.ReadLine();
 
@@ -18,7 +19,10 @@ namespace ClusteringLab.ArffParser {
                     toReturn = LoadRelation(line);
                 }
                 else if (line.StartsWith("@attribute")) {
-                    AddRelationAttribute(toReturn, line);
+                    if (!columnsToIgnore.Contains(currentColumn)) {
+                        AddRelationAttribute(toReturn, line);
+                    }
+                    currentColumn++;
                 }
                 else if (line.StartsWith("@data")) {
                     notInDataSection = false;
@@ -29,7 +33,7 @@ namespace ClusteringLab.ArffParser {
             while (!reader.EndOfStream) {
                 string line = reader.ReadLine();
 
-                AddRelationRow(toReturn, line);
+                AddRelationRow(toReturn, line, columnsToIgnore);
             }
 
             return toReturn;
@@ -60,19 +64,23 @@ namespace ClusteringLab.ArffParser {
             relation.AddColumn(column);
         }
 
-        private static void AddRelationRow(ArffRelation relation, string row) {
+        private static void AddRelationRow(ArffRelation relation, string row, List<int> ignoredCols) {
             string[] values = row.Split(',');
             List<double> rowValues = new List<double>();
 
+            int effectiveCol = 0;
             for (int i = 0; i < values.Length; i++) {
-                if (values[i] == "?") {
-                    rowValues.Add(double.MaxValue);
-                }
-                else if (relation.Columns[i].IsReal) {
-                    rowValues.Add(double.Parse(values[i]));
-                }
-                else {
-                    rowValues.Add(relation.Columns[i].NominalValues[values[i]]);
+                if (!ignoredCols.Contains(i)) {
+                    if (values[i] == "?") {
+                        rowValues.Add(double.MaxValue);
+                    }
+                    else if (relation.Columns[effectiveCol].IsReal) {
+                        rowValues.Add(double.Parse(values[i]));
+                    }
+                    else {
+                        rowValues.Add(relation.Columns[effectiveCol].NominalValues[values[i]]);
+                    }
+                    effectiveCol++;
                 }
             }
 
