@@ -43,51 +43,75 @@ namespace ClusteringLab.ArffParser {
             var averages = new List<double>(_values.Count);
 
             for (int col = 0; col < _values.Count; col++) {
-                // Preventing out of bounds issues with list.
                 averages.Add(0);
                 if (_relation.Columns[col].IsReal) {
-                    double average = 0;
-                    int unknownCount = 0;
-                    foreach (ArffRow row in toAverage) {
-                        // Ignore unknown values when calculating averages.
-                        if (!row.ColumnIsUnkown(col)) {
-                            average += row._values[col];
-                        }
-                        else {
-                            unknownCount++;
-                        }
-                    }
-                    average /= (toAverage.Count - unknownCount);
-                    averages[col] = average;
+                    averages[col] = GetAverageForRealColumn(col, toAverage);
                 }
                 else {
-                    // For nominal values, get the mode rather than the average.
-                    var nominalOptionCounts = new Dictionary<double, int>();
-                    foreach (ArffRow row in toAverage) {
-                        // Ignore unknown values.
-                        if (!row.ColumnIsUnkown(col)) {
-                            double key = row._values[col];
-                            if (!nominalOptionCounts.ContainsKey(key)) {
-                                nominalOptionCounts.Add(key, 1);
-                            }
-                            else {
-                                nominalOptionCounts[key] += 1;
-                            }
-                        }
-                    }
-                    double highestCountKey = -1;
-                    int highestCount = 0;
-                    foreach (double key in nominalOptionCounts.Keys) {
-                        if (nominalOptionCounts[key] > highestCount) {
-                            highestCount = nominalOptionCounts[key];
-                            highestCountKey = key;
-                        }
-                    }
-                    averages[col] = highestCountKey;
+                    averages[col] = GetModeForNominalColumn(col, toAverage);
                 }
             }
 
             return new ArffRow(_relation, averages);
+        }
+
+        private double GetModeForNominalColumn(int col, List<ArffRow> toAverage) {
+            double mode = -1;
+
+            var nominalCounts = new Dictionary<double, int>();
+            foreach (ArffRow row in toAverage) {
+                // Only count known rows.
+                if (!row.ColumnIsUnkown(col)) {
+                    double value = row._values[col];
+                    if (!nominalCounts.ContainsKey(value)) {
+                        nominalCounts.Add(value, 1);
+                    }
+                    else {
+                        int currentCount = nominalCounts[value];
+                        nominalCounts[value] = currentCount + 1;
+                    }
+                }
+            }
+
+            int highestCount = -1;
+            double highestCountKey = -1;
+            foreach (double key in nominalCounts.Keys) {
+                if (nominalCounts[key] > highestCount) {
+                    highestCount = nominalCounts[key];
+                    highestCountKey = key;
+                }
+                else if (nominalCounts[key] == highestCount) {
+                    // In case of a tie, choose the nominal attribute first in the metadata list.
+                    // This will be the lower key, because the key is effectively the index of nominal metadata.
+                    if (key < highestCountKey) {
+                        highestCountKey = key;
+                    }
+                }
+            }
+
+            mode = highestCountKey;
+
+            return mode;
+        }
+
+        private double GetAverageForRealColumn(int col, List<ArffRow> toAverage) {
+            double average = 0;
+
+            int knownCount = 0;
+            foreach (ArffRow row in toAverage) {
+                // Only count known rows.
+                if (!row.ColumnIsUnkown(col)) {
+                    knownCount++;
+                    average += row._values[col];
+                }
+            }
+            if (knownCount == 0) {
+                average = double.MaxValue;
+            }
+            else {
+                average /= knownCount;
+            }
+            return average;
         }
     }
 }

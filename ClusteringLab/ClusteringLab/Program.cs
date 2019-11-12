@@ -47,7 +47,6 @@ namespace ClusteringLab {
                 squaredError = nextSquaredError;
                 nextSquaredError = clusterer.TotalSquaredError();
             }
-            int test = 0;
         }
 
         private static string ERROR_MESSAGE = "There was an error parsing the command line inputs. Please include the following arguments: {0} <Arff File Location> {1} <K for Clustering> {2} <Use random initial cluster locations>\nOptional Parameters: {3} <Column indices to ignore>\nInternal Error: {4}";
