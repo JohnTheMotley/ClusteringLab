@@ -64,6 +64,7 @@ namespace ClusteringLab.ArffParser {
                     // For nominal values, get the mode rather than the average.
                     var nominalOptionCounts = new Dictionary<double, int>();
                     foreach (ArffRow row in toAverage) {
+                        // Ignore unknown values.
                         if (!row.ColumnIsUnkown(col)) {
                             double key = row._values[col];
                             if (!nominalOptionCounts.ContainsKey(key)) {

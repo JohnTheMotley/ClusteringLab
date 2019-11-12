@@ -2,7 +2,7 @@
   "profiles": {
     "ClusteringLab": {
       "commandName": "Project",
-      "commandLineArgs": "--k 5 --randomInitials false --arffFile C:\\Users\\motlj\\Desktop\\test.arff --ignoredColumns 0"
+      "commandLineArgs": "--k 5 --randomInitials false --arffFile C:\\Users\\motlj\\Desktop\\test.arff --ignoredColumns 0,17"
     }
   }
 }
