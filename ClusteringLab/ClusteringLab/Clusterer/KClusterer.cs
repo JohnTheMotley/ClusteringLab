@@ -9,25 +9,33 @@ namespace ClusteringLab.Clusterer {
         private ArffRelation _relation;
         private List<Cluster> _clusters;
 
-        public KClusterer(int k, ArffRelation relation) {
+        public KClusterer(int k, ArffRelation relation, bool randomInitials) {
             _k = k;
             _relation = relation;
-            _clusters = GetInitialClusters();
+            _clusters = GetInitialClusters(randomInitials);
         }
 
-        private List<Cluster> GetInitialClusters() {
+        private List<Cluster> GetInitialClusters(bool randomInitials) {
             var rand = new Random();
             var clusters = new List<Cluster>();
 
-            // Building the initial clusters.
-            var chosenRows = new List<int>();
-            for (int i = 0; i < _k; i++) {
-                int row = rand.Next(_relation.Rows.Count);
-                while (chosenRows.Contains(row)) {
-                    row = rand.Next(_relation.Rows.Count);
+            if (randomInitials) {
+                // Building the initial clusters randomly.
+                var chosenRows = new List<int>();
+                for (int i = 0; i < _k; i++) {
+                    int row = rand.Next(_relation.Rows.Count);
+                    while (chosenRows.Contains(row)) {
+                        row = rand.Next(_relation.Rows.Count);
+                    }
+                    chosenRows.Add(row);
+                    clusters.Add(new Cluster(_relation.Rows[row].Clone()));
                 }
-                chosenRows.Add(row);
-                clusters.Add(new Cluster(_relation.Rows[row].Clone()));
+            }
+            else {
+                // Selecting the first rows as cluster start points.
+                for (int i = 0; i < _k; i++) {
+                    clusters.Add(new Cluster(_relation.Rows[i].Clone()));
+                }
             }
 
             // Assigns rows to their closest clusters for initial placement.

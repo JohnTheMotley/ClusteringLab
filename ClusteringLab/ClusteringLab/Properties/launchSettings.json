@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "ClusteringLab": {
+      "commandName": "Project",
+      "commandLineArgs": "--k 4 --randomInitials false --arffFile C:\\Users\\motlj\\Desktop\\test.arff"
+    }
+  }
+}
