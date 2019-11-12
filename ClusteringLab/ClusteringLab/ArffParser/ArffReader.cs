@@ -33,7 +33,10 @@ namespace ClusteringLab.ArffParser {
             while (!reader.EndOfStream) {
                 string line = reader.ReadLine();
 
-                AddRelationRow(toReturn, line, columnsToIgnore);
+                // % starts a comment line in arff files.
+                if (!line.StartsWith("%")) {
+                    AddRelationRow(toReturn, line, columnsToIgnore);
+                }
             }
 
             return toReturn;
