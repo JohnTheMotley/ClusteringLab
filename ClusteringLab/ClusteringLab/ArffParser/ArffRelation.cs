@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Linq;
 
 namespace ClusteringLab.ArffParser {
     public class ArffRelation {
@@ -28,6 +29,10 @@ namespace ClusteringLab.ArffParser {
         
         public void AddRow(ArffRow row) {
             _rows.Add(row);
+        }
+
+        public void Normalize() {
+            Rows[0].Normalize(Rows);
         }
     }
 }

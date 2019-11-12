@@ -20,6 +20,35 @@ namespace ClusteringLab.ArffParser {
             return _values[col] == double.MaxValue;
         }
 
+        /// <summary>
+        /// Credit: Paul Bodily
+        /// This function is based on Paul Bodily's machine learning toolkit normalization function.
+        /// </summary>
+        public void Normalize(List<ArffRow> toNormalize) {
+            for (int col = 0; col < _values.Count; col++) {
+                if (_relation.Columns[col].IsReal) {
+                    double minValue = double.MaxValue;
+                    double maxValue = double.MinValue;
+                    foreach (ArffRow row in toNormalize) {
+                        if (!row.ColumnIsUnkown(col)) {
+                            if (row._values[col] < minValue) {
+                                minValue = row._values[col];
+                            }
+                            if (row._values[col] > maxValue) {
+                                maxValue = row._values[col];
+                            }
+                        }
+                    }
+                    foreach (ArffRow row in toNormalize) {
+                        // Unknown values are not normalized.
+                        if (!row.ColumnIsUnkown(col)) {
+                            row._values[col] = (row._values[col] - minValue) / (maxValue - minValue);
+                        }
+                    }
+                }
+            }
+        }
+
         public double GetDistance(ArffRow from) {
             double distance = 0;
 
