@@ -50,6 +50,7 @@ namespace ClusteringLab.Clusterer {
         public StringBuilder Data() {
             var builder = new StringBuilder();
             builder.Append(string.Format(CENTROID_MESSAGE, Position.Data()) + "\n");
+            builder.Append(string.Format(SSE_MESSAGE, SumSquaredError()) + "\n");
 
             var dataBuilder = new StringBuilder();
             foreach (var row in _points) {
@@ -63,5 +64,6 @@ namespace ClusteringLab.Clusterer {
         }
 
         private static string CENTROID_MESSAGE = "Centroid: {0}";
+        private static string SSE_MESSAGE = "SSE: {0}";
     }
 }

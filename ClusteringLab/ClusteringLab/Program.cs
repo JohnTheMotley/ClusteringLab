@@ -76,6 +76,6 @@ namespace ClusteringLab {
 
         private static string SEPARATOR = "----------";
         private static string ITERATION_MESSAGE = "Iteration: {0}";
-        private static string SSE_MESSAGE = "SSE: {0}";
+        private static string SSE_MESSAGE = "Total SSE: {0}";
     }
 }
