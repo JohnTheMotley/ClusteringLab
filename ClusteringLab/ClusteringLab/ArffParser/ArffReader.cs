@@ -15,16 +15,16 @@ namespace ClusteringLab.ArffParser {
             while (!reader.EndOfStream && notInDataSection) {
                 string line = reader.ReadLine();
 
-                if (line.StartsWith("@relation")) {
+                if (line.ToLower().StartsWith("@relation")) {
                     toReturn = LoadRelation(line);
                 }
-                else if (line.StartsWith("@attribute")) {
+                else if (line.ToLower().StartsWith("@attribute")) {
                     if (!columnsToIgnore.Contains(currentColumn)) {
                         AddRelationAttribute(toReturn, line);
                     }
                     currentColumn++;
                 }
-                else if (line.StartsWith("@data")) {
+                else if (line.ToLower().StartsWith("@data")) {
                     notInDataSection = false;
                 }
             }
@@ -48,13 +48,14 @@ namespace ClusteringLab.ArffParser {
         }
 
         private static void AddRelationAttribute(ArffRelation relation, string attribute) {
-            string[] attributeValues = attribute.Split(' ');
+            //string[] attributeValues = attribute.Split(new char[] { ' ', '\t' });
+            string[] attributeValues = System.Text.RegularExpressions.Regex.Split(attribute, @"[\s\t]+");
 
             string name = attributeValues[1];
             bool isReal = true;
             Map<double, string> nominals = null;
 
-            if (attributeValues[2].ToLower() != "real") {
+            if (attributeValues[2].ToLower() != "real" && attributeValues[2].ToLower() != "continuous") {
                 isReal = false;
                 nominals = new Map<double, string>();
                 string[] nominalValues = attributeValues[2].Trim(new char[] { '{', '}' }).Split(',');
