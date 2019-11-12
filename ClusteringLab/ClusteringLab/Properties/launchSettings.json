@@ -2,7 +2,7 @@
   "profiles": {
     "ClusteringLab": {
       "commandName": "Project",
-      "commandLineArgs": "--k 4 --randomInitials false --arffFile C:\\ComputerScience\\CS4478\\Datasets\\sponge.arff --normalize false"
+      "commandLineArgs": "--k 7 --randomInitials true --arffFile C:\\ComputerScience\\CS4478\\Datasets\\abalone.arff --normalize true"
     }
   }
 }
