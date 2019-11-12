@@ -45,7 +45,9 @@ namespace ClusteringLab.ArffParser {
         public ArffRow Average(List<ArffRow> toAverage) {
             var averages = new List<double>(_values.Count);
 
-            for (int col = 0; col < averages.Count; col++) {
+            for (int col = 0; col < _values.Count; col++) {
+                // Preventing out of bounds issues with list.
+                averages.Add(0);
                 if (_relation.Columns[col].IsReal) {
                     double average = 0;
                     foreach (ArffRow row in toAverage) {
@@ -84,6 +86,29 @@ namespace ClusteringLab.ArffParser {
             }
 
             return new ArffRow(_relation, averages);
+        }
+
+        public double SquaredError(ArffRow from) {
+            double squaredError = 0;
+            for (int col = 0; col < _values.Count; col++) {
+                if (_relation.Columns[col].IsReal) {
+                    if (this.ColumnIsUnkown(col) || from.ColumnIsUnkown(col)) {
+                        squaredError += 1;
+                    }
+                    else {
+                        squaredError += Math.Pow(from._values[col] - this._values[col], 2);
+                    }
+                }
+                else {
+                    if (this.ColumnIsUnkown(col) || from.ColumnIsUnkown(col)) {
+                        squaredError += 1;
+                    }
+                    else {
+                        squaredError += this._values[col] == from._values[col] ? 0 : 1;
+                    }
+                }
+            }
+            return squaredError;
         }
     }
 }

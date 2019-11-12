@@ -36,6 +36,15 @@ namespace ClusteringLab.Clusterer {
             return clusters;
         }
 
+        public void ReCluster() {
+            foreach (Cluster c in _clusters) {
+                c.Position = c.GetAveragePositionOfPoints();
+                c.ClearPoints();
+            }
+
+            AssignRows(_clusters);
+        }
+
         private void AssignRows(List<Cluster> clusters) {
             foreach (ArffRow row in _relation.Rows) {
                 double closestDistance = double.MaxValue;
@@ -49,6 +58,14 @@ namespace ClusteringLab.Clusterer {
                 }
                 closestCluster.AddPoint(row);
             }
+        }
+
+        public double TotalSquaredError() {
+            double error = 0;
+            foreach (Cluster c in _clusters) {
+                error += c.SumSquaredError();
+            }
+            return error;
         }
 
     }

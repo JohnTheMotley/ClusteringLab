@@ -9,6 +9,16 @@ namespace ClusteringLab {
             var relation = ArffParser.ArffReader.LoadArff(stream);
 
             var clusterer = new Clusterer.KClusterer(3, relation);
+            double squaredError = clusterer.TotalSquaredError();
+
+            clusterer.ReCluster();
+            double nextSquaredError = clusterer.TotalSquaredError();
+            while (nextSquaredError < squaredError) {
+                clusterer.ReCluster();
+                squaredError = nextSquaredError;
+                nextSquaredError = clusterer.TotalSquaredError();
+            }
+            int test = 0;
         }
     }
 }
